@@ -3,6 +3,12 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re
 
+def GetTexto(soup):
+    for tags in soup(['script', 'style']):
+        tags.decompose()
+
+    return ' '.join(soup.stripped_strings)
+
 def crawl(pagina):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     http = urllib3.PoolManager()
