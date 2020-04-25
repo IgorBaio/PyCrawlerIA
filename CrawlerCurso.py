@@ -2,6 +2,24 @@ import urllib3
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re
+import nltk
+
+def SeparaPalavras(texto):
+    stop = nltk.corpus.stopwords.words('portuguese')
+    stemmer = nltk.stem.RSLPStemmer()
+    splitter = re.compile('\W+')
+    lista_palavras = []
+    lista = [p for p in splitter.split(texto) if p != ""]
+
+    for p in lista:
+        if p.lower() not in stop:
+            if len(p) > 1:
+                lista_palavras.append(stemmer.stem(p).lower())
+    return lista_palavras
+
+teste = SeparaPalavras('Este lugar é apavorante')
+for t in teste:
+    print(t)
 
 def GetTexto(soup):
     for tags in soup(['script', 'style']):
@@ -25,7 +43,6 @@ def GetSoup(dados_pagina):
     return soup.find_all('a')
     
 def GetData(listaPag, profundidade):
-    # pagina = 'https://fitgirlrepacks.co/all-my-repacks-a-z/'+str(NumOfPag)
     for i in range(profundidade):
         novas_paginas = set()
         for pagina in listaPag:
